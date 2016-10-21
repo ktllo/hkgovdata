@@ -40,7 +40,19 @@ public class BinaryData implements java.lang.Comparable<BinaryData>{
 		@Override
 		public void flush() throws IOException{
 			super.flush();
-			BinaryData.this.data = this.toByteArray();
+			byte [] tmpData = data;
+			data = new byte[tmpData.length+buf.length];
+			for(int i=0;i<tmpData.length;i++){
+				data[i]=tmpData[i];
+			}
+			for(int i=0;i<buf.length;i++){
+				data[i+tmpData.length] = buf[i];
+			}
+			clear();
 		}
+	}
+	
+	public void clear(){
+		data = new byte[0];
 	}
 }
