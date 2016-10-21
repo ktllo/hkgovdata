@@ -2,6 +2,7 @@ package org.leolo.data;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 
 public class Message {
 
@@ -11,6 +12,10 @@ public class Message {
 	private String style;
 	private String title;
 
+	public Message(){
+		attachments = new Vector<>();
+	}
+	
 	public List<BinaryData> getAttachments() {
 		return attachments;
 	}

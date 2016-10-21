@@ -55,4 +55,10 @@ public class BinaryData implements java.lang.Comparable<BinaryData>{
 	public void clear(){
 		data = new byte[0];
 	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 }
