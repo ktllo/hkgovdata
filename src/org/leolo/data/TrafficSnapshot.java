@@ -13,13 +13,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class TrafficSnapshot implements DataParser {
-
+	Logger logger = LoggerFactory.getLogger(TrafficSnapshotList.class);
 	@Override
 	public List<Message> parse(Map<String, String> data) {
 		String target = data.get("key");
@@ -27,6 +29,7 @@ public class TrafficSnapshot implements DataParser {
 			throw new IllegalArgumentException();
 		}
 		String url = "http://tdcctv.data.one.gov.hk/image?key="+target;
+		logger.debug("url is {}",url);
 		List<Message> messages = new Vector<>();
 		try {
 			URLConnection connection = new URL(url).openConnection();
@@ -41,9 +44,11 @@ public class TrafficSnapshot implements DataParser {
 				image.setMimeType("image/jpeg");
 				image.setName(target+".jpg");
 				image.setData(Base64.decodeBase64(node.getTextContent()));
+				Map<String,TrafficSnapshotListItem> listofSnapshot = TrafficSnapshotList.getList();
 				Message msg = new Message();
-				msg.setContent("Traffic snapshot");
-				msg.setTitle("Traffic snapshot");
+				msg.setContent(listofSnapshot.get(target).getName_en());
+				msg.setTitle(listofSnapshot.get(target).getName_en());
+				logger.info("Snapshot {} in {} with key {} is retrived.",listofSnapshot.get(target).getName_en(),listofSnapshot.get(target).getRegion_en(),listofSnapshot.get(target).getKey());
 				msg.getAttachments().add(image);
 				messages.add(msg);
 			}
